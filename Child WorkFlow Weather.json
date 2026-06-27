@@ -1,0 +1,177 @@
+{
+  "name": "Child WorkFlow Weather",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "2fd6d11a-cf22-4d77-bafe-74078845c262",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d9366fb5-b117-4d08-88b9-ca94d863ff81",
+              "name": "query",
+              "value": "={{ $json.query }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "074ccc2d-8468-4599-8b21-faaaf640bc28",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "cityName": "={{ $json.query }}"
+      },
+      "type": "n8n-nodes-base.openWeatherMap",
+      "typeVersion": 1,
+      "position": [
+        416,
+        0
+      ],
+      "id": "15b5e0ff-7cef-4e60-ad64-e60bf22d1927",
+      "name": "OpenWeatherMap",
+      "credentials": {
+        "openWeatherMapApi": {
+          "id": "9oS0UrOKb9hKrmm5",
+          "name": "OpenWeatherMap account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-nano",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-NANO"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=i am giving you open api weather results which basically the details of the weather of any city. kindly use that information and give  me only main description with a emojis and ask more\n\nmain:{{ $json.weather[0].main }}\ndescription:{{ $json.weather[0].description }}\ntemperature:{{ $json.main.temp }}\nfeels like:{{ $json.main.feels_like }}\ntemperature max:{{ $json.main.temp_max }}\ntemperature min:{{ $json.main.temp_min }}\nhumidity:{{ $json.main.humidity }}\nwind\nspeed:{{ $json.wind.speed }}\ndeg:{{ $json.wind.deg }}\n\ncountry:{{ $json.sys.country }}\ncityname:{{ $json.name }}\nsunrise:{{ $json.sys.sunrise }}\nsunset:{{ $json.sys.sunset }}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        576,
+        0
+      ],
+      "id": "d6d5cd70-5700-4ad0-8a0d-50c36a18aca6",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "05S8Y0MAtD7pGH45",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "99ca07ae-6516-40e6-843e-dc82e80e19d0",
+              "name": "Response:",
+              "value": "={{ $json.output[0].content[0].text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        928,
+        0
+      ],
+      "id": "4981a4e1-224d-430e-8eb8-dcecb057ce3c",
+      "name": "Edit Fields1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "OpenWeatherMap",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenWeatherMap": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "c4d99436-d9b3-426a-a2a3-39c689fe95dc",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8ebdcaba0a4dfbfae6e4d5a138d7a7f2590a4ec1ce8dcb190af1a7ba6579b581"
+  },
+  "nodeGroups": [],
+  "id": "i4nPnS6D7EK2Bn6t",
+  "tags": []
+}
