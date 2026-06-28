@@ -50,17 +50,17 @@ Formatted Weather Response
 
 ## Parent Workflow
 
-```md
-![Parent Workflow](Parent.png)
-```
+<p align="center">
+  <img src="Parent.png" width="100%" alt="Parent Workflow">
+</p>
 
 ---
 
 ## Child Workflow
 
-```md
-![Child Workflow](Child.png)
-```
+<p align="center">
+  <img src="Child.png" width="100%" alt="Child Workflow">
+</p>
 
 ---
 
